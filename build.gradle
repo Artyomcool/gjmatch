@@ -1,0 +1,43 @@
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'maven-publish'
+    id 'jacoco'
+}
+
+group 'com.github.artyomcool'
+version '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.codehaus.groovy:groovy-all:3.0.3'
+    compileOnly "com.google.code.gson:gson:2.8.6"
+
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
+    testImplementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+publishing {
+    publications {
+        gjmatch(MavenPublication) {
+            from components.java
+        }
+    }
+}

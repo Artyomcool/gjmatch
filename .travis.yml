@@ -1,0 +1,12 @@
+language: java
+sudo: false # faster builds
+
+notifications:
+  email: false
+
+jdk:
+  - openjdk8
+  - openjdk14
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
