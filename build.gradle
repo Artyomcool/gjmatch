@@ -35,13 +35,18 @@ jacocoTestReport {
 check.dependsOn jacocoTestReport
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
+    classifier 'javadoc'
     from javadoc
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    classifier 'sources'
     from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
 
 signing {
