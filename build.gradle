@@ -1,12 +1,14 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'maven-publish'
+    id 'maven'
+    id 'signing'
     id 'jacoco'
 }
 
-group 'com.github.artyomcool'
-version '0.1'
+group = 'com.github.artyomcool'
+archivesBaseName = 'gjmatch'
+version = '0.1'
 
 repositories {
     mavenCentral()
@@ -14,10 +16,8 @@ repositories {
 
 dependencies {
     compileOnly 'org.codehaus.groovy:groovy-all:3.0.3'
-    compileOnly "com.google.code.gson:gson:2.8.6"
 
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
-    testImplementation 'com.google.code.gson:gson:2.8.6'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
 }
 
@@ -34,10 +34,63 @@ jacocoTestReport {
 
 check.dependsOn jacocoTestReport
 
-publishing {
-    publications {
-        gjmatch(MavenPublication) {
-            from components.java
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty('nexusUsername')) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+            }
+
+            pom.project {
+                name 'GJMatch'
+                packaging 'jar'
+                description 'Library for testing and verifying JSON using groovy GString syntax.'
+                url 'https://github.com/Artyomcool/gjmatch'
+
+                scm {
+                    connection 'scm:git:ssh://github.com/Artyomcool/gjmatch'
+                    developerConnection 'scm:git:ssh://github.com/Artyomcool/gjmatch'
+                    url 'https://github.com/Artyomcool/gjmatch'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'https://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'artyomcool'
+                        name 'Artyom Drozdov'
+                        email 'artyomcool2@gmail.com'
+                    }
+                }
+            }
         }
     }
 }

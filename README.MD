@@ -124,3 +124,11 @@ void capture() {
 ```
 
 **Note**: it is non-goal to provide runtime-verifiers for production code. The main goal is to help with api testings.
+
+Gradle dependency:
+```groovy
+dependencies {
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
+    testImplementation 'com.github.artyomcool:gjmatch:0.1'
+}
+```
