@@ -6,6 +6,8 @@ plugins {
     id 'jacoco'
 }
 
+boolean hasNexusCredentials = project.hasProperty('nexusUsername')
+
 group = 'com.github.artyomcool'
 archivesBaseName = 'gjmatch'
 version = '0.1'
@@ -49,14 +51,16 @@ artifacts {
     archives javadocJar
 }
 
-signing {
-    sign configurations.archives
+if (hasNexusCredentials) {
+    signing {
+        sign configurations.archives
+    }
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            if (project.hasProperty('nexusUsername')) {
+            if (hasNexusCredentials) {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
