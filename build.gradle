@@ -10,7 +10,7 @@ boolean hasNexusCredentials = project.hasProperty('nexusUsername')
 
 group = 'com.github.artyomcool'
 archivesBaseName = 'gjmatch'
-version = '0.1'
+version = '0.2'
 
 repositories {
     mavenCentral()

@@ -10,7 +10,7 @@ import java.io.Writer;
 class NamedClosure<T> extends Closure<T> implements Writable {
 
     private final Closure<T> closure;
-    private final GString name;
+    protected final GString name;
 
     NamedClosure(GString name, Closure<T> closure) {
         super(closure);

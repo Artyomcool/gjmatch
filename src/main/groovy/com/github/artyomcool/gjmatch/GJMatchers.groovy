@@ -147,6 +147,16 @@ class GJMatchers {
         }
     }
 
+    static CaptureOnceClosure capture() {
+        def tmp = []
+        return new CaptureOnceClosure(capture(tmp) as NamedClosure<Boolean>) {
+            @Override
+            Object getValue() {
+                return tmp[0]
+            }
+        }
+    }
+
     static Closure<Boolean> anyOf(Closure<?>... closures) {
         return namedClosure("any of " + Arrays.toString(closures)) { obj ->
             closures.any { Closure<?> it ->
@@ -173,6 +183,17 @@ class GJMatchers {
 
     static <T> Closure<T> namedClosure(GString name, Closure<T> first) {
         return new NamedClosure<>(name, first)
+    }
+
+    static abstract class CaptureOnceClosure extends NamedClosure<Boolean> {
+
+        protected CaptureOnceClosure(NamedClosure<Boolean> closure) {
+            super(closure.name, closure)
+            setResolveStrategy(TO_SELF)
+        }
+
+        abstract Object getValue()
+
     }
 
 }

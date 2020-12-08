@@ -172,6 +172,29 @@ class Showcase {
     }
 
     @Test
+    void captureOnce() {
+        def cap = GJMatchers.capture()
+
+        def json =
+                """
+                {
+                    "f1": "v1"
+                }
+                """
+
+        def pattern =
+                """
+                {
+                    "f1": $cap
+                }
+                """
+
+        match(json, pattern)
+
+        assert cap.value == "v1"
+    }
+
+    @Test
     void same() {
         def same = same(anyString)
 
